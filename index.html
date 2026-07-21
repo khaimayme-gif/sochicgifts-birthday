@@ -34,6 +34,29 @@
     .page.exit{opacity:0;transform:translateX(-30px)}
 
     /* ══ SHARED COMPONENTS ══ */
+    #musicPlayer{
+        position:fixed;
+        bottom:20px;
+        right:20px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        background:rgba(255,255,255,.85);
+        backdrop-filter:blur(12px);
+        padding:10px 16px;
+        border-radius:30px;
+        box-shadow:0 6px 20px rgba(0,0,0,.15);
+        z-index:9999;
+    }
+
+    #musicToggle{
+        border:none;
+        background:none;
+        font-size:20px;
+        cursor:pointer;
+    }
+
+    /* ══ SHARED COMPONENTS ══ */
     .back-btn{position:fixed;top:20px;left:20px;z-index:100;display:flex;align-items:center;gap:5px;font-family:var(--round);font-size:13px;font-weight:600;color:var(--rose);background:rgba(255,255,255,.75);border:1px solid rgba(231,76,60,.2);border-radius:50px;padding:7px 16px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
     .back-btn:hover{background:white;border-color:var(--rose-lt)}
 
@@ -218,7 +241,7 @@
     .wish-reveal{display:none;animation:fadeUp .8s var(--eb) both}
     .wish-reveal.show{display:flex;flex-direction:column;align-items:center;gap:.75rem}
     .wish-banner{font-family:var(--script);font-size:2rem;color:var(--gold-lt);text-align:center;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.2)}
-    .wish-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:.65rem 1rem;font-family:var(--serif);font-style:italic;font-size:.82rem;color:var(--white);line-height:1.55;text-align:center;width:100%;animation:fadeUp .6s var(--eb) both}
+    .wish-pill{background:rgba(255,255,255,.12);border:1px solid #F4AFC9;border-radius:12px;padding:.65rem 1rem;font-family:var(--serif);font-style:italic;font-size:.82rem;color:#000;line-height:1.55;text-align:center;width:100%;animation:fadeUp .6s var(--eb) both}
 
 
     /* ---- screen 1: envelope ---- */
@@ -335,6 +358,7 @@
     .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:white;font-family:var(--round);font-size:12px;font-weight:700;padding:10px 24px;border-radius:50px;opacity:0;pointer-events:none;transition:opacity .3s,transform .35s var(--eb);z-index:9999;white-space:nowrap}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   </style>
+  <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
 
@@ -359,7 +383,7 @@ const C = {
     "Love you forever 🌸",
     "The best is yet to come 🎂",
     "You deserve all the happiness ❤️"
-],
+  ],
 
   /* Memory card messages — 12 cards */
   cards: [
@@ -553,13 +577,26 @@ const C = {
   </div>
 </div>
 
+
+<!-- ═══════════ PAGE 6: MEMORY GAME ═══════════ -->
+<div class="page" id="pg-game">
+  <button class="back-btn" onclick="goTo('pg-menu')">‹ Back</button>
+  <div class="game-inner">
+    <p class="section-title">Memory For You</p>
+    <p class="section-sub">Tap each card to find a hidden message 💌</p>
+    <div class="card-grid" id="card-grid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════
      PAGE 5 — MAKE A WISH
 ══════════════════════════ -->
-<div class="page red-page" id="pg-cake">
+<div class="page" id="pg-cake">
   <button class="back-btn" onclick="goTo('pg-menu')">‹ Back</button>
   <div class="confetti-layer" id="cake-cf"></div>
-
+  <!-- Cake -->
   <div class="cake-scene">
     <h2 class="page-heading" style="margin-bottom:.1rem">Make a Wish</h2>
     <p class="page-sub" style="margin-bottom:.75rem">Tap each candle to blow it out 🕯️</p>
@@ -676,6 +713,11 @@ const C = {
         </button>
       </div>
     </div>
+  </div>
+  <!-- Music Player -->
+  <div id="musicPlayer">
+      <button id="musicToggle">⏸</button>
+      <span>♪ Happy Birthday</span>
   </div>
 </div>
 
@@ -957,6 +999,15 @@ function goTo(id) {
     updateCounter();
     setInterval(updateCounter, 1000);
   }
+  /* ══════ ADD MUSIC ══════ */
+  const music = document.getElementById("cakeMusic");
+
+  if (id === "pg-cake") {
+      music.play().catch(err => console.log(err));
+  } else {
+      music.pause();
+      music.currentTime = 0;
+  }
 }
 
 /* ══════ PIN LOCK ══════ */
@@ -1225,5 +1276,8 @@ C.cakeWishes.forEach((w,i) => {
   d.style.animationDelay=`${.2+i*.1}s`;d.textContent=w;wishPillsEl.appendChild(d);
 });
 </script>
+<audio id="cakeMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 </body>
 </html>
