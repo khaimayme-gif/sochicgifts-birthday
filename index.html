@@ -95,36 +95,38 @@
     .start-btn:active{transform:scale(.97)}
 
     /* ══════════ PAGE 2: LOCK ══════════ */
+    .lock-header{pointer-events:none;width:100%;height:auto;overflow:hidden;display:flex;justify-content:center;align-items:center;background:linear-gradient(to bottom, #ffd8e9,#fff7fa);}
+    .lock-header img{width:100%;height:100%;object-fit:cover;}
     #pg-lock{background:var(--white);flex-direction:row;flex-wrap:wrap;min-height:100vh;padding:0}
     .lock-photos{flex:1;min-width:0;background:var(--pink-pale);display:flex;flex-direction:column;gap:10px;padding:20px 16px;justify-content:center;min-height:50vh}
     .lock-photo-slot{flex:1;border-radius:16px;overflow:hidden;background:linear-gradient(150deg,#FFE9F3,#FFCFE6);min-height:80px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 22px rgba(233,30,140,.14),inset 0 1px 0 rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5);position:relative}
     .lock-photo-slot::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.45) 0%,transparent 55%);pointer-events:none}
     .lock-photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
 
-    .lock-panel{width:min(360px,100%);padding:2rem 1.5rem;display:flex;flex-direction:column;align-items:center;gap:0}
-    .lock-bow{font-size:36px;margin-bottom:.75rem;animation:cakeFloat 3s ease-in-out infinite}
-    .lock-title{font-family:var(--round);font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:.35rem}
-    .lock-hint{font-size:.8rem;color:var(--muted);margin-bottom:1.25rem;text-align:center;line-height:1.5}
+    .lock-panel{display: flex; flex-direction: column; align-items: center; width:100%;max-width:380px;margin-top:-30px;background:white;border-radius:30px 30px 0 0;padding:32px 24px;flex-direction:column;align-items:center;gap:0}
+    .lock-bow{font-size:36px;margin-bottom:.4rem;animation:cakeFloat 3s ease-in-out infinite}
+    .lock-title{font-family:var(--round);font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:.15rem}
+    .lock-hint{font-size:.8rem;color:var(--muted);margin-bottom:18px;text-align:center;line-height:1.5}
 
-    .pin-display{display:flex;gap:12px;margin-bottom:1.25rem}
-    .pin-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--pink-lt);background:transparent;transition:background .15s,border-color .15s}
+    .pin-display{display:flex;gap:10px;margin-bottom:28px}
+    .pin-dot{width:15px;height:15px;border-width:2px;border-radius:50%;border:2px solid var(--pink-lt);background:transparent;transition:background .15s,border-color .15s}
     .pin-dot.filled{background:var(--pink-deep);border-color:var(--pink-deep)}
     .pin-dot.error{background:var(--rose-lt);border-color:var(--rose-lt);animation:pinShake .35s ease}
     @keyframes pinShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
-    .pin-error-msg{font-size:.8rem;color:var(--rose-lt);font-weight:600;min-height:18px;text-align:center;margin-bottom:.75rem}
+    .pin-error-msg{text-align: center; font-size:.8rem;color:var(--rose-lt);font-weight:600;min-height:18px;text-align:center;margin-bottom:.75rem}
 
-    .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:280px}
-    .num-key{height:56px;border-radius:14px;border:1.5px solid #F0D0E0;background:white;font-family:var(--round);font-size:1.2rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
+    .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:330px; width: 100%;}
+    .num-key{height:68px;border-radius:14px;border:1.5px solid #F0D0E0;background:white;font-family:var(--round);font-size:1.3rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
     .num-key:hover{background:var(--pink-pale);border-color:var(--pink-lt)}
     .num-key:active{transform:scale(.93);background:var(--pink-lt)}
     .num-key.zero{grid-column:2}
-    .num-key.del{background:var(--pink-pale);color:var(--rose-lt);border-color:transparent}
+    .num-key.del{background:#FFF4F7;color:#ff5f5f;;color:var(--rose-lt);border-color:transparent}
 
     /* mobile: stack the photo strip above the keypad instead of squeezing them side by side */
     @media (max-width:700px){
       #pg-lock{flex-direction:column;flex-wrap:nowrap;overflow-y:auto}
-      .lock-photos{flex-direction:row;width:100%;min-height:0;padding:18px 16px 10px;gap:10px}
+      .lock-photos{width:100%;height:220px;display:flex;justify-content:center;align-items:center;overflow:hidden;padding:0;width:100%;min-height:0;padding:18px 16px 10px;gap:10px}
       .lock-photo-slot{min-height:64px;max-height:90px;font-size:24px;border-radius:14px}
       .lock-panel{padding:1.25rem 1.5rem 2rem}
     }
@@ -460,8 +462,8 @@ const C = {
 
 <!-- ═══════════ PAGE 2: LOCK ═══════════ -->
 <div class="page" id="pg-lock">
-  <div class="lock-photos" id="lock-photo-panel">
-    <!-- filled by JS -->
+  <div class="lock-header">
+    <img src="lock-header.png">
   </div>
   <div class="lock-panel">
     <span class="lock-bow">🎀</span>
@@ -902,21 +904,6 @@ document.getElementById('lock-hint').innerHTML     = C.pinHint + '<br/><small st
 document.getElementById('counter-msg-el').textContent  = C.counterMsg;
 document.getElementById('counter-love-el').textContent = C.counterLove;
 /* Love letter content (see LOVE LETTER script block below for setup) */
-
-/* Lock photos */
-const lockPanel = document.getElementById('lock-photo-panel');
-for (let i = 0; i < 3; i++) {
-  const slot = document.createElement('div');
-  slot.className = 'lock-photo-slot';
-  if (C.lockPhotos && C.lockPhotos[i]) {
-    const img = document.createElement('img');
-    img.src = C.lockPhotos[i]; img.alt = 'Memory';
-    slot.appendChild(img);
-  } else {
-    slot.textContent = ['💑','🌸','💕'][i];
-  }
-  lockPanel.appendChild(slot);
-}
 
 /* Couple photo on counter */
 if (C.couplePhoto) {
