@@ -73,8 +73,9 @@
 
     /* ══════════ PAGE 2: LOCK ══════════ */
     #pg-lock{background:var(--white);flex-direction:row;flex-wrap:wrap;min-height:100vh;padding:0}
-    .lock-photos{flex:1;min-width:0;background:var(--pink-pale);display:flex;flex-direction:column;gap:8px;padding:20px 16px;justify-content:center;min-height:50vh}
-    .lock-photo-slot{flex:1;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#FFE4F0,#FFD0E8);min-height:80px;display:flex;align-items:center;justify-content:center;font-size:28px}
+    .lock-photos{flex:1;min-width:0;background:var(--pink-pale);display:flex;flex-direction:column;gap:10px;padding:20px 16px;justify-content:center;min-height:50vh}
+    .lock-photo-slot{flex:1;border-radius:16px;overflow:hidden;background:linear-gradient(150deg,#FFE9F3,#FFCFE6);min-height:80px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 22px rgba(233,30,140,.14),inset 0 1px 0 rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5);position:relative}
+    .lock-photo-slot::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.45) 0%,transparent 55%);pointer-events:none}
     .lock-photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
 
     .lock-panel{width:min(360px,100%);padding:2rem 1.5rem;display:flex;flex-direction:column;align-items:center;gap:0}
@@ -96,6 +97,14 @@
     .num-key:active{transform:scale(.93);background:var(--pink-lt)}
     .num-key.zero{grid-column:2}
     .num-key.del{background:var(--pink-pale);color:var(--rose-lt);border-color:transparent}
+
+    /* mobile: stack the photo strip above the keypad instead of squeezing them side by side */
+    @media (max-width:700px){
+      #pg-lock{flex-direction:column;flex-wrap:nowrap;overflow-y:auto}
+      .lock-photos{flex-direction:row;width:100%;min-height:0;padding:18px 16px 10px;gap:10px}
+      .lock-photo-slot{min-height:64px;max-height:90px;font-size:24px;border-radius:14px}
+      .lock-panel{padding:1.25rem 1.5rem 2rem}
+    }
 
     /* ══════════ PAGE 3: MENU ══════════ */
     #pg-menu{background:linear-gradient(180deg,#FFF0F5 0%,#FFE4EE 100%)}
@@ -121,7 +130,7 @@
     .section-sub{font-size:.82rem;color:var(--muted);margin-bottom:2rem}
 
     /* Fanned card stack */
-    .card-fan{position:relative;width:220px;height:310px;margin:0 auto 1.5rem}
+    .card-fan{position:relative;width:220px;height:310px;margin:0 auto 1.5rem;cursor:pointer}
     .mem-card{position:absolute;width:200px;height:290px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12);cursor:pointer;transition:transform .4s var(--eb);top:10px;left:10px}
     .mem-card:nth-child(1){transform:rotate(-8deg) translateX(-16px);z-index:1}
     .mem-card:nth-child(2){transform:rotate(-2deg);z-index:2}
@@ -247,7 +256,8 @@
 
     /* ---- screen 2: love letter ---- */
     .ll-s2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;opacity:0;pointer-events:none;transition:opacity 1.4s var(--es);padding:1.5rem 1rem}
-    .ll-s2.ll-show{opacity:1;pointer-events:all}
+    .ll-s2.ll-show{opacity:1}
+    #pg-letter.active .ll-s2.ll-show{pointer-events:all}
     .ll-lbg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 72% 18%,rgba(235,175,155,.42) 0%,transparent 62%),radial-gradient(ellipse 60% 75% at 18% 82%,rgba(205,138,115,.32) 0%,transparent 60%),linear-gradient(162deg,#FAF0E8 0%,#F6E2D8 35%,#EED6CA 65%,#F6E2D8 100%)}
     .ll-lbg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 38%,rgba(148,52,36,.1) 100%)}
 
@@ -732,13 +742,15 @@ C.memCards.forEach((mc, i) => {
         <p class="mem-card-caption">${mc.caption}</p>
       </div>
     </div>`;
-  card.addEventListener('click', () => bringToFront(card));
   fan.appendChild(card);
 });
-function bringToFront(el) {
-  fan.querySelectorAll('.mem-card').forEach(c => c.classList.remove('front'));
-  el.classList.add('front');
-}
+/* tap anywhere on the stack: front card slides to the back, next card comes forward */
+fan.addEventListener('click', () => {
+  const cards = fan.children;
+  if (!cards.length) return;
+  const topCard = cards[cards.length - 1];
+  fan.insertBefore(topCard, fan.firstChild);
+});
 
 /* Game cards */
 const grid = document.getElementById('card-grid');
