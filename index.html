@@ -540,7 +540,7 @@ const C = {
     </div>
       <div class="menu-card" onclick="goTo('pg-letter')">
         <div class="menu-card-icon">💌</div>
-        <p class="menu-card-title">Birthday Wish</p>
+        <p class="menu-card-title">Love Letter</p>
         <p class="menu-card-sub">Sweet message from my heart ✉️</p>
         <span class="menu-card-heart">♡</span>
       </div>
@@ -751,10 +751,10 @@ const C = {
             </svg>
           </button>
           <div class="share-row" id="share-row">
-            <button class="sh-icon" onclick="shareToTikTok()" aria-label="TikTok">
+            <button class="sh-icon" onclick="shareToTikTok('wish')" aria-label="TikTok">
               <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
             </button>
-            <button class="sh-icon" onclick="shareToFb()" aria-label="Facebook">
+            <button class="sh-icon" onclick="shareToFb('wish')" aria-label="Facebook">
               <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
             </button>
             <button class="sh-icon" id="copy-btn" onclick="copyLink()" aria-label="Copy link">🔗</button>
@@ -926,10 +926,10 @@ const C = {
             </svg>
           </button>
           <div class="share-row" id="share-row">
-            <button class="sh-icon" onclick="shareToTikTok()" aria-label="TikTok">
+            <button class="sh-icon" onclick="shareToTikTok('letter')" aria-label="TikTok">
               <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
             </button>
-            <button class="sh-icon" onclick="shareToFb()" aria-label="Facebook">
+            <button class="sh-icon" onclick="shareToFb('letter')" aria-label="Facebook">
               <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
             </button>
             <button class="sh-icon" id="copy-btn" onclick="copyLink()" aria-label="Copy link">🔗</button>
@@ -1360,14 +1360,88 @@ async function saveWishPhoto(){
   }
 }
 
-async function shareToTikTok() {
-  const p={title:`🎂 Happy Birthday ${C.receiverName}! A special surprise from So Chic Gifts`,text:'The most beautiful birthday surprise 🎂🎉',url:window.location.href};
-  if(navigator.share){try{await navigator.share(p)}catch(e){if(e.name!=='AbortError')copyLink()}}
-  else copyLink('Link copied! Paste it in your TikTok 🎂');
+/* ══ SOCIAL SHARE (Facebook / TikTok) ══
+   Captures the actual on-screen photo (cake wish or letter) and, on phones,
+   hands it straight to the OS share sheet with the image attached — tapping
+   Facebook or TikTok there drops it directly into their Story/Post composer.
+   Neither platform exposes a public web API to open "create a Story" directly
+   from a website, so on desktop (no native share sheet) we fall back to
+   Facebook's official share dialog, and for TikTok (which has no desktop web
+   equivalent at all) we auto-download the photo and prompt the user to
+   upload it in the TikTok app. */
+
+async function captureShareImage(context){
+  if(context==='letter'){
+    const paper = document.querySelector('#pg-letter .ll-paper');
+    if(!paper) return null;
+    const original = { maxHeight: paper.style.maxHeight, overflowY: paper.style.overflowY };
+    paper.style.maxHeight = 'none';
+    paper.style.overflowY = 'visible';
+    try{
+      const canvas = await html2canvas(paper, { scale:3, backgroundColor:'#FFF8EE', useCORS:true });
+      return await new Promise(res=>canvas.toBlob(res,'image/png'));
+    } finally {
+      paper.style.maxHeight = original.maxHeight;
+      paper.style.overflowY = original.overflowY;
+    }
+  } else {
+    const target = document.getElementById('pg-cake');
+    if(!target) return null;
+    const canvas = await html2canvas(target, {
+      scale: 3,
+      useCORS: true,
+      ignoreElements: (el) => el.classList && (
+        el.classList.contains('back-btn') ||
+        el.classList.contains('share-wrap') ||
+        el.id === 'musicPlayer'
+      )
+    });
+    return await new Promise(res=>canvas.toBlob(res,'image/png'));
+  }
 }
-function shareToFb(){
-  const u=encodeURIComponent(window.location.href);
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${u}`,'_blank','width=580,height=420');
+
+async function shareViaNativeSheet(context, title, text, filename){
+  if(!(navigator.share && navigator.canShare)) return false;
+  try{
+    const blob = await captureShareImage(context);
+    if(!blob) return false;
+    const file = new File([blob], filename, { type:'image/png' });
+    if(!navigator.canShare({ files:[file] })) return false;
+    await navigator.share({ files:[file], title, text });
+    return true;
+  }catch(e){
+    if(e.name==='AbortError') return true; // user cancelled the sheet themselves, don't fall back
+    return false;
+  }
+}
+
+async function shareToFb(context){
+  const title = `🎂 Happy Birthday ${C.receiverName}! A special surprise from So Chic Gifts`;
+  const text = 'Made this with love 💕 — tap Facebook to post it to your Story or Wall!';
+  const shared = await shareViaNativeSheet(context, title, text, 'birthday-surprise.png');
+  if(shared) return;
+  // Desktop / unsupported fallback: Facebook's official share dialog (posts link to wall)
+  const u = encodeURIComponent(window.location.href);
+  const quote = encodeURIComponent(title);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${u}&quote=${quote}`,'_blank','width=580,height=650');
+}
+
+async function shareToTikTok(context){
+  const title = `🎂 Happy Birthday ${C.receiverName}!`;
+  const text = 'Tap TikTok to post this to your Story! 🎬';
+  const shared = await shareViaNativeSheet(context, title, text, 'birthday-surprise.png');
+  if(shared) return;
+  // Desktop fallback: TikTok has no web share dialog, so save the photo and guide the user
+  try{
+    const blob = await captureShareImage(context);
+    if(blob){
+      const link = document.createElement('a');
+      link.download = 'birthday-surprise.png';
+      link.href = URL.createObjectURL(blob);
+      link.click();
+    }
+  }catch(e){ console.error('TikTok share capture failed:', e); }
+  copyLink('Photo saved! Open TikTok and upload it to share your Story 🎬');
 }
 function copyLink(msg){
   navigator.clipboard.writeText(window.location.href).then(()=>{
