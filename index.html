@@ -356,22 +356,20 @@
     .ll-s2.ll-show .ll-foot{opacity:1;transform:none}
     .ll-foot-h{font-size:.9rem;letter-spacing:.5em;color:rgba(178,38,48,.28)}
     .ll-foot-b{font-size:.54rem;letter-spacing:.42em;text-transform:uppercase;color:rgba(122,62,44,.28);margin-top:8px}
-    .ll-s2 .share-row{margin-top:22px}
+    .ll-s2 .share-row{margin-top:0px}
 
     /* share row */
-    .share-wrap{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:.6rem}
-    .share-fab{background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s var(--eb)}
-    .share-fab:active{transform:scale(.92)}
-    .share-fab img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
-    .share-row{display:flex;gap:.6rem;flex-wrap:wrap;margin:0;opacity:0;transform:translateY(10px) scale(.9);pointer-events:none;transition:all .25s var(--eb)}
-    .share-row.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
-    .sh-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:50px;cursor:pointer;font-family:var(--round);font-size:12px;font-weight:700;transition:transform .2s var(--eb)}
-    .sh-btn:hover{transform:scale(1.05)}
-    .sh-btn:active{transform:scale(.96)}
-    .sh-tt{background:#111;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.2)}
-    .sh-fb{background:#1877F2;color:#fff;box-shadow:0 4px 14px rgba(24,119,242,.28)}
-    .sh-cp{background:white;color:var(--pink-deep);border:1.5px solid var(--pink-lt)}
-    .sh-save{background:var(--pink-deep);color:#fff;border:none}
+    .share-wrap{position:fixed;right:16px;bottom:44px;z-index:20}
+    .share-pill{display:flex;align-items:center;background:linear-gradient(135deg,#FF6FA5,#E91E8C);border-radius:50px;box-shadow:0 8px 24px rgba(233,30,140,.35);overflow:hidden;max-width:54px;height:54px;transition:max-width .45s cubic-bezier(.34,1.2,.4,1)}
+    .share-pill.open{max-width:280px}
+    .share-toggle{flex-shrink:0;width:54px;height:54px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+    .share-toggle svg{width:22px;height:22px}
+    .share-toggle:active{transform:scale(.9)}
+    .share-row{display:flex;align-items:center;gap:4px;padding-right:14px;opacity:0;transition:opacity .25s ease .15s}
+    .share-pill.open .share-row{opacity:1}
+    .sh-icon{flex-shrink:0;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:transform .15s,background .15s}
+    .sh-icon:hover{background:rgba(255,255,255,.32)}
+    .sh-icon:active{transform:scale(.88)}
     .sh-save:active{transform:scale(.96)}
     .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:white;font-family:var(--round);font-size:12px;font-weight:700;padding:10px 24px;border-radius:50px;opacity:0;pointer-events:none;transition:opacity .3s,transform .35s var(--eb);z-index:9999;white-space:nowrap}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -745,22 +743,24 @@ const C = {
       
 <!-- ═══════════ SHARE WRAP ═══════════ -->
       <div class="share-wrap" id="share-wrap">
-        <div class="share-row" id="share-row">
-          <button class="sh-btn sh-tt" onclick="shareToTikTok()">
-            <svg width="13" height="13" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
-            TikTok
+        <div class="share-pill" id="share-pill">
+          <button class="share-toggle" onclick="toggleShareRow()" aria-label="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
+            </svg>
           </button>
-          <button class="sh-btn sh-fb" onclick="shareToFb()">
-            <svg width="13" height="13" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
-            Facebook
-          </button>
-          <button class="sh-btn sh-cp" id="copy-btn" onclick="copyLink()">
-            🔗 <span id="copy-lbl">Copy link</span>
-          </button>
+          <div class="share-row" id="share-row">
+            <button class="sh-icon" onclick="shareToTikTok()" aria-label="TikTok">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
+            </button>
+            <button class="sh-icon" onclick="shareToFb()" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
+            </button>
+            <button class="sh-icon" id="copy-btn" onclick="copyLink()" aria-label="Copy link">🔗</button>
+            <button class="sh-icon" id="save-photo-btn" onclick="saveLetterPhoto()" aria-label="Save Photo">💾</button>
+          </div>
         </div>
-        <button class="share-fab" id="share-fab" onclick="toggleShareRow()">
-          <img src="share.png" alt="Share">
-        </button>
       </div>
     </div>
   </div>
@@ -918,23 +918,24 @@ const C = {
       </div>
 <!-- ═══════════ SHARE WRAP ═══════════ -->
       <div class="share-wrap" id="share-wrap">
-        <div class="share-row" id="share-row">
-          <button class="sh-btn sh-tt" onclick="shareToTikTok()">
-            ...
+        <div class="share-pill" id="share-pill">
+          <button class="share-toggle" onclick="toggleShareRow()" aria-label="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
+            </svg>
           </button>
-          <button class="sh-btn sh-fb" onclick="shareToFb()">
-            ...
-          </button>
-          <button class="sh-btn sh-cp" id="copy-btn" onclick="copyLink()">
-            🔗 <span id="copy-lbl">Copy link</span>
-          </button>
-          <button class="sh-btn sh-save" id="save-photo-btn" onclick="saveLetterPhoto()">
-            💾 <span id="save-lbl">Save Photo</span>
-          </button>
+          <div class="share-row" id="share-row">
+            <button class="sh-icon" onclick="shareToTikTok()" aria-label="TikTok">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
+            </button>
+            <button class="sh-icon" onclick="shareToFb()" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
+            </button>
+            <button class="sh-icon" id="copy-btn" onclick="copyLink()" aria-label="Copy link">🔗</button>
+            <button class="sh-icon" id="save-photo-btn" onclick="saveLetterPhoto()" aria-label="Save Photo">💾</button>
+          </div>
         </div>
-        <button class="share-fab" id="share-fab" onclick="toggleShareRow()">
-          <img src="share.png" alt="Share">
-        </button>
       </div>
     <input type="file" id="ll-fi0" accept="image/*" style="display:none" onchange="llHandleUp(0,this)">
     <input type="file" id="ll-fi1" accept="image/*" style="display:none" onchange="llHandleUp(1,this)">
@@ -1255,7 +1256,7 @@ function llHandleUp(i, el){
 
 /* ══════ SHARE ══════ */
 function toggleShareRow(){
-  document.querySelectorAll('[id="share-row"]').forEach(el => el.classList.toggle('open'));
+  document.querySelectorAll('[id="share-pill"]').forEach(el => el.classList.toggle('open'));
 }
 
 /* ══ MUSIC PLAYER UI ══ */
