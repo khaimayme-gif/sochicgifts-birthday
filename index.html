@@ -1371,6 +1371,8 @@ async function saveWishPhoto(){
    upload it in the TikTok app. */
 
 async function captureShareImage(context){
+  if(document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(e){} }
+  const shareScale = Math.min(5, Math.max(4, (window.devicePixelRatio||1) * 2.5));
   if(context==='letter'){
     const paper = document.querySelector('#pg-letter .ll-paper');
     if(!paper) return null;
@@ -1378,7 +1380,7 @@ async function captureShareImage(context){
     paper.style.maxHeight = 'none';
     paper.style.overflowY = 'visible';
     try{
-      const canvas = await html2canvas(paper, { scale:3, backgroundColor:'#FFF8EE', useCORS:true });
+      const canvas = await html2canvas(paper, { scale:shareScale, backgroundColor:'#FFF8EE', useCORS:true });
       return await new Promise(res=>canvas.toBlob(res,'image/png'));
     } finally {
       paper.style.maxHeight = original.maxHeight;
@@ -1388,7 +1390,7 @@ async function captureShareImage(context){
     const target = document.getElementById('pg-cake');
     if(!target) return null;
     const canvas = await html2canvas(target, {
-      scale: 3,
+      scale: shareScale,
       useCORS: true,
       ignoreElements: (el) => el.classList && (
         el.classList.contains('back-btn') ||
