@@ -758,7 +758,7 @@ const C = {
               <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
             </button>
             <button class="sh-icon" id="copy-btn" onclick="copyLink()" aria-label="Copy link">🔗</button>
-            <button class="sh-icon" id="save-photo-btn" onclick="saveLetterPhoto()" aria-label="Save Photo">💾</button>
+            <button class="sh-icon" id="save-wish-btn" onclick="saveWishPhoto()" aria-label="Save Photo">💾</button>
           </div>
         </div>
       </div>
@@ -1256,7 +1256,9 @@ function llHandleUp(i, el){
 
 /* ══════ SHARE ══════ */
 function toggleShareRow(){
-  document.querySelectorAll('[id="share-pill"]').forEach(el => el.classList.toggle('open'));
+  const activePage = document.querySelector('.page.active');
+  const pill = activePage ? activePage.querySelector('.share-pill') : null;
+  if (pill) pill.classList.toggle('open');
 }
 
 /* ══ MUSIC PLAYER UI ══ */
@@ -1294,15 +1296,15 @@ mpMusic.addEventListener('pause', mpSync);
 
 async function saveLetterPhoto(){
   const paper = document.querySelector('#pg-letter .ll-paper');
-  const btn = document.getElementById('save-lbl');
-  if (!paper) return;
+  const btn = document.getElementById('save-photo-btn');
+  if (!paper || !btn) return;
 
   const original = { maxHeight: paper.style.maxHeight, overflowY: paper.style.overflowY };
   // temporarily un-clip the scrollable paper so the whole letter gets captured, not just the visible part
   paper.style.maxHeight = 'none';
   paper.style.overflowY = 'visible';
-
-  btn.textContent = 'Saving…';
+  const originalIcon = btn.innerHTML;
+  btn.innerHTML = '⏳';
 
   try {
     const canvas = await html2canvas(paper, {
@@ -1316,14 +1318,45 @@ async function saveLetterPhoto(){
     link.href = canvas.toDataURL('image/png');
     link.click();
 
-    btn.textContent = 'Saved! ✓';
+    btn.innerHTML = '✅';
   } catch (err) {
     console.error('Save photo failed:', err);
-    btn.textContent = 'Try again';
+    btn.innerHTML = '⚠️';
   } finally {
     paper.style.maxHeight = original.maxHeight;
     paper.style.overflowY = original.overflowY;
-    setTimeout(() => { btn.textContent = 'Save Photo'; }, 2000);
+    setTimeout(() => { btn.innerHTML = originalIcon; }, 2000);
+  }
+}
+
+async function saveWishPhoto(){
+  const target = document.getElementById('pg-cake');
+  const btn = document.getElementById('save-wish-btn');
+  if (!target || !btn) return;
+
+  const originalIcon = btn.innerHTML;
+  btn.innerHTML = '⏳';
+
+  try {
+    const canvas = await html2canvas(target, {
+      scale: 3,
+      useCORS: true,
+      ignoreElements: (el) => el.classList && (
+        el.classList.contains('back-btn') ||
+        el.classList.contains('share-wrap') ||
+        el.id === 'musicPlayer'
+      )
+    });
+    const link = document.createElement('a');
+    link.download = 'my-birthday-wish.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.innerHTML = '✅';
+  } catch (err) {
+    console.error('Save wish photo failed:', err);
+    btn.innerHTML = '⚠️';
+  } finally {
+    setTimeout(() => { btn.innerHTML = originalIcon; }, 2000);
   }
 }
 
