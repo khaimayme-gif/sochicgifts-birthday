@@ -25,6 +25,8 @@
       --round:     'Nunito', system-ui, sans-serif;
       --eb:        cubic-bezier(0.34,1.56,0.64,1);
       --es:        cubic-bezier(0.22,1,0.36,1);
+      --gold-lt:   #F4D58D;
+      --serif:     'Cormorant Garamond', serif;
     }
     html,body{height:100%;font-family:var(--round);background:var(--pink-pale);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden}
 
@@ -34,27 +36,34 @@
     .page.exit{opacity:0;transform:translateX(-30px)}
 
     /* ══ SHARED COMPONENTS ══ */
-    #musicPlayer{
-        position:fixed;
-        bottom:20px;
-        right:20px;
-        display:flex;
-        align-items:center;
-        gap:10px;
-        background:rgba(255,255,255,.85);
-        backdrop-filter:blur(12px);
-        padding:10px 16px;
-        border-radius:30px;
-        box-shadow:0 6px 20px rgba(0,0,0,.15);
-        z-index:9999;
-    }
-
-    #musicToggle{
-        border:none;
-        background:none;
-        font-size:20px;
-        cursor:pointer;
-    }
+    #musicPlayer{position:relative;width:100%;max-width:300px;margin:0 auto;background:linear-gradient(160deg,#FFFFFF 0%,#FFF0F7 100%);backdrop-filter:blur(16px);border:1px solid rgba(233,30,140,.12);border-radius:20px;padding:12px 16px 14px;box-shadow:0 10px 30px rgba(233,30,140,.14),inset 0 1px 0 rgba(255,255,255,.8);display:flex;flex-direction:column;gap:9px}
+    .mp-top{display:flex;align-items:center;gap:12px}
+    .mp-cover{width:42px;height:42px;border-radius:9px;overflow:hidden;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,.18);background:linear-gradient(135deg,#FFD1E8,#FFB6D9)}
+    .mp-cover img{width:100%;height:100%;object-fit:cover;display:block}
+    .mp-info{flex:1;min-width:0}
+    .mp-title{font-family:var(--round);font-weight:800;font-size:.88rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mp-artist{font-family:var(--round);font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mp-wave{display:flex;align-items:flex-end;gap:2px;height:16px;flex-shrink:0;opacity:.85}
+    .mp-wave span{width:2.5px;background:var(--pink-deep);border-radius:2px;animation:mpWave 1s ease-in-out infinite}
+    .mp-wave span:nth-child(1){animation-delay:0s}
+    .mp-wave span:nth-child(2){animation-delay:.15s}
+    .mp-wave span:nth-child(3){animation-delay:.3s}
+    .mp-wave span:nth-child(4){animation-delay:.45s}
+    #musicPlayer.paused .mp-wave span{animation-play-state:paused;height:30%!important}
+    @keyframes mpWave{0%,100%{height:30%}50%{height:100%}}
+    .mp-progress{display:flex;align-items:center;gap:8px}
+    .mp-time{font-size:.64rem;color:var(--muted);font-variant-numeric:tabular-nums;width:32px;flex-shrink:0}
+    .mp-time-rem{text-align:right}
+    .mp-bar{flex:1;height:4px;border-radius:2px;background:rgba(233,30,140,.12);position:relative;cursor:pointer}
+    .mp-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--pink-deep);width:0%}
+    .mp-controls{display:flex;align-items:center;justify-content:space-between;padding:0 2px}
+    .mp-btn{border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);padding:5px;transition:transform .15s,color .15s}
+    .mp-btn:hover{color:var(--pink-deep)}
+    .mp-btn:active{transform:scale(.88)}
+    .mp-btn svg{width:18px;height:18px}
+    .mp-play svg{width:24px;height:24px}
+    .mp-play{color:#fff}
+    .mp-airplay svg{width:16px;height:16px;opacity:.55}
 
     /* ══ SHARED COMPONENTS ══ */
     .back-btn{position:fixed;top:20px;left:20px;z-index:100;display:flex;align-items:center;gap:5px;font-family:var(--round);font-size:13px;font-weight:600;color:var(--rose);background:rgba(255,255,255,.75);border:1px solid rgba(231,76,60,.2);border-radius:50px;padding:7px 16px;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
@@ -207,7 +216,7 @@
     .popup-close:active{transform:scale(.96)}
 
     /* ══════════ PAGE 7: LOVE LETTER ══════════ */
-    #pg-letter{background:#0B0507;overflow:hidden}
+    #pg-letter{background:linear-gradient(180deg,#FFF0F5 0%,#FFE4EE 100%);overflow:hidden}
 
     .ll-reset{position:absolute;top:16px;right:16px;z-index:1100;width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,252,248,.88);backdrop-filter:blur(14px);font-size:1rem;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,.1);display:none;transition:transform .25s}
     .ll-reset.on{display:flex}
@@ -218,7 +227,15 @@
     .ll-cvs canvas{width:100%;height:100%}
 
   /* ══════════ COPIED CODES ══════════ */
+    #pg-cake{
+      background:radial-gradient(ellipse 70% 50% at 50% 15%,rgba(255,182,213,.4) 0%,transparent 60%),
+                  linear-gradient(160deg,#FFF0F8 0%,#FFDCEE 55%,#FFC8E4 100%);
+      overflow:hidden;
+    }
+    .confetti-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
     .cake-scene{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;max-width:460px;gap:1rem;padding:0 1rem}
+    .page-heading{font-family:var(--script);font-size:clamp(2.2rem,7vw,3rem);color:var(--pink-deep);text-shadow:0 4px 16px rgba(233,30,140,.18)}
+    .page-sub{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 
     /* Birthday cake SVG candles — interactive */
     .cake-svg-wrap{position:relative;width:min(220px,70vw);cursor:pointer}
@@ -228,31 +245,31 @@
     @keyframes flamePuff{0%{transform:scale(1);opacity:1}100%{transform:scale(0) translateY(-8px);opacity:0}}
     @keyframes smokeDrift{0%{opacity:.7;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
 
-    .candle-hint{font-family:var(--round);font-size:.72rem;color:rgba(255,255,255,.55);font-style:italic;letter-spacing:.04em;animation:blink 2s ease-in-out infinite}
+    .candle-hint{font-family:var(--round);font-size:.72rem;color:var(--muted);font-style:italic;letter-spacing:.04em;animation:blink 2s ease-in-out infinite}
     @keyframes blink{0%,100%{opacity:.55}50%{opacity:.9}}
 
     /* wish reveal after all candles blown */
     .wish-reveal{display:none;animation:fadeUp .8s var(--eb) both}
     .wish-reveal.show{display:flex;flex-direction:column;align-items:center;gap:.75rem}
-    .wish-banner{font-family:var(--script);font-size:2rem;color:var(--gold-lt);text-align:center;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.2)}
-    .wish-pill{background:rgba(255,255,255,.12);border:1px solid #F4AFC9;border-radius:12px;padding:.65rem 1rem;font-family:var(--serif);font-style:italic;font-size:.82rem;color:#000;line-height:1.55;text-align:center;width:100%;animation:fadeUp .6s var(--eb) both}
+    .wish-banner{font-family:var(--script);font-size:2rem;color:var(--pink-deep);text-align:center;line-height:1.2;text-shadow:0 2px 10px rgba(233,30,140,.15)}
+    .wish-pill{background:#fff;border:1px solid #F4AFC9;border-radius:12px;padding:.65rem 1rem;font-family:var(--serif);font-style:italic;font-size:.82rem;color:var(--text);line-height:1.55;text-align:center;width:100%;box-shadow:0 4px 16px rgba(233,30,140,.1);animation:fadeUp .6s var(--eb) both}
 
 
     /* ---- screen 1: envelope ---- */
     .ll-s1{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;
-      background:radial-gradient(ellipse 55% 40% at 50% 65%,rgba(130,12,22,.42) 0%,transparent 70%),
-                  radial-gradient(ellipse 100% 60% at 50% 100%,rgba(80,5,12,.65) 0%,transparent 55%),
-                  linear-gradient(168deg,#100608 0%,#0B0507 50%,#080304 100%);
+      background:radial-gradient(ellipse 55% 40% at 50% 65%,rgba(255,182,213,.5) 0%,transparent 70%),
+                  radial-gradient(ellipse 100% 60% at 50% 100%,rgba(255,200,220,.4) 0%,transparent 55%),
+                  linear-gradient(168deg,#FFF0F8 0%,#FFE4EE 50%,#FFD8EC 100%);
       transition:opacity 1.2s var(--es),transform 1.2s var(--es);}
     .ll-s1.ll-out{opacity:0;transform:scale(.95);pointer-events:none}
 
     .ll-stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-    .ll-star{position:absolute;border-radius:50%;background:rgba(255,240,215,.55);animation:llTwinkle var(--d) ease-in-out var(--dl) infinite}
+    .ll-star{position:absolute;border-radius:50%;background:rgba(233,30,140,.4);animation:llTwinkle var(--d) ease-in-out var(--dl) infinite}
     @keyframes llTwinkle{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.75;transform:scale(1.5)}}
 
     .ll-head{text-align:center;margin-bottom:clamp(24px,5vw,40px);opacity:0;animation:llRiseIn 1s ease .3s forwards}
-    .ll-brand{font-size:clamp(.5rem,1.5vw,.65rem);letter-spacing:.5em;text-transform:uppercase;color:rgba(210,170,100,.45)}
-    .ll-tagline{font-family:var(--script);font-size:clamp(.95rem,2.8vw,1.35rem);color:rgba(220,180,130,.35);margin-top:4px}
+    .ll-brand{font-size:clamp(.5rem,1.5vw,.65rem);letter-spacing:.5em;text-transform:uppercase;color:var(--pink-deep);opacity:.6}
+    .ll-tagline{font-family:var(--script);font-size:clamp(.95rem,2.8vw,1.35rem);color:var(--text);opacity:.55;margin-top:4px}
 
     .ll-scene{perspective:2200px;perspective-origin:50% 32%;opacity:0;animation:llRiseIn 1.3s ease .6s forwards}
 
@@ -287,8 +304,8 @@
     @keyframes llHeartFloat{0%{opacity:0;transform:translateY(0) scale(0) rotate(-15deg)}25%{opacity:1;transform:translateY(-25px) scale(1.3) rotate(5deg)}70%{opacity:.9;transform:translateY(-70px) scale(1) rotate(-5deg)}100%{opacity:0;transform:translateY(-110px) scale(.7) rotate(10deg)}}
 
     .ll-hint{margin-top:clamp(30px,6vw,46px);text-align:center;opacity:0;animation:llRiseIn 1s ease 1.8s forwards}
-    .ll-hint-lbl{font-size:.66rem;font-weight:300;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.2)}
-    .ll-hint-chev{display:block;margin-top:6px;font-size:.78rem;color:rgba(255,255,255,.16);animation:llChevron 2.6s ease-in-out infinite}
+    .ll-hint-lbl{font-size:.66rem;font-weight:300;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+    .ll-hint-chev{display:block;margin-top:6px;font-size:.78rem;color:var(--pink-deep);opacity:.5;animation:llChevron 2.6s ease-in-out infinite}
     @keyframes llChevron{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
     @keyframes llRiseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
@@ -342,17 +359,30 @@
     .ll-s2 .share-row{margin-top:22px}
 
     /* share row */
-    .share-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+    .share-wrap{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:.6rem}
+    .share-fab{background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s var(--eb)}
+    .share-fab:active{transform:scale(.92)}
+    .share-fab img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+    .share-row{display:flex;gap:.6rem;flex-wrap:wrap;margin:0;opacity:0;transform:translateY(10px) scale(.9);pointer-events:none;transition:all .25s var(--eb)}
+    .share-row.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
     .sh-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:50px;cursor:pointer;font-family:var(--round);font-size:12px;font-weight:700;transition:transform .2s var(--eb)}
     .sh-btn:hover{transform:scale(1.05)}
     .sh-btn:active{transform:scale(.96)}
     .sh-tt{background:#111;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.2)}
     .sh-fb{background:#1877F2;color:#fff;box-shadow:0 4px 14px rgba(24,119,242,.28)}
     .sh-cp{background:white;color:var(--pink-deep);border:1.5px solid var(--pink-lt)}
+    .sh-save{background:var(--pink-deep);color:#fff;border:none}
+    .sh-save:active{transform:scale(.96)}
     .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:white;font-family:var(--round);font-size:12px;font-weight:700;padding:10px 24px;border-radius:50px;opacity:0;pointer-events:none;transition:opacity .3s,transform .35s var(--eb);z-index:9999;white-space:nowrap}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* footer text */
+    .app-footer{position:fixed;bottom:6px;left:0;right:0;text-align:center;font-family:var(--round);font-size:.62rem;color:var(--muted);opacity:.7;z-index:50;pointer-events:none;letter-spacing:.02em}
+    .app-footer a{color:var(--pink-deep);font-weight:700;text-decoration:none;pointer-events:auto}
+    .app-footer a:hover{text-decoration:underline}
   </style>
   <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -512,7 +542,7 @@ const C = {
     </div>
       <div class="menu-card" onclick="goTo('pg-letter')">
         <div class="menu-card-icon">💌</div>
-        <p class="menu-card-title">Love Letter</p>
+        <p class="menu-card-title">Birthday Wish</p>
         <p class="menu-card-sub">Sweet message from my heart ✉️</p>
         <span class="menu-card-heart">♡</span>
       </div>
@@ -589,6 +619,28 @@ const C = {
   <div class="confetti-layer" id="cake-cf"></div>
   <!-- Cake -->
   <div class="cake-scene">
+    <div id="musicPlayer">
+      <div class="mp-top">
+        <div class="mp-cover"><img src="song-cover.jpeg" alt=""></div>
+        <div class="mp-info">
+          <div class="mp-title">Happy Birthday</div>
+          <div class="mp-artist">For You</div>
+        </div>
+        <div class="mp-wave" id="mp-wave"><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="mp-progress">
+        <span class="mp-time" id="mp-time-cur">0:00</span>
+        <div class="mp-bar" id="mp-bar"><div class="mp-bar-fill" id="mp-bar-fill"></div></div>
+        <span class="mp-time mp-time-rem" id="mp-time-rem">-0:00</span>
+      </div>
+      <div class="mp-controls">
+        <button class="mp-btn" id="mp-prev"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zM21 18V6l-8.5 6 8.5 6z"/></svg></button>
+        <button class="mp-btn mp-play" id="musicToggle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>
+        <button class="mp-btn" id="mp-next"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 6v12l8.5-6L13 6zM3 6v12l8.5-6L3 6z"/></svg></button>
+        <button class="mp-btn mp-airplay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-2"/><path d="M12 15l5 6H7l5-6z"/></svg></button>
+      </div>
+    </div>
+
     <h2 class="page-heading" style="margin-bottom:.1rem">Make a Wish</h2>
     <p class="page-sub" style="margin-bottom:.75rem">Tap each candle to blow it out 🕯️</p>
 
@@ -690,25 +742,27 @@ const C = {
     <div class="wish-reveal" id="wish-reveal">
       <p class="wish-banner" id="wish-banner">Your wish is granted! 🎉</p>
       <div id="wish-pills"></div>
-      <div class="share-row">
-        <button class="sh-btn sh-tt" onclick="shareToTikTok()">
-          <svg width="12" height="12" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5V15.7C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
-          TikTok
-        </button>
-        <button class="sh-btn sh-fb" onclick="shareToFb()">
-          <svg width="12" height="12" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
-          Facebook
-        </button>
-        <button class="sh-btn sh-cp" id="copy-btn" onclick="copyLink()">
-          🔗 <span id="copy-lbl">Copy link</span>
+      
+<!-- ═══════════ SHARE WRAP ═══════════ -->
+      <div class="share-wrap" id="share-wrap">
+        <div class="share-row" id="share-row">
+          <button class="sh-btn sh-tt" onclick="shareToTikTok()">
+            <svg width="13" height="13" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
+            TikTok
+          </button>
+          <button class="sh-btn sh-fb" onclick="shareToFb()">
+            <svg width="13" height="13" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
+            Facebook
+          </button>
+          <button class="sh-btn sh-cp" id="copy-btn" onclick="copyLink()">
+            🔗 <span id="copy-lbl">Copy link</span>
+          </button>
+        </div>
+        <button class="share-fab" id="share-fab" onclick="toggleShareRow()">
+          <img src="share.png" alt="Share">
         </button>
       </div>
     </div>
-  </div>
-  <!-- Music Player -->
-  <div id="musicPlayer">
-      <button id="musicToggle">⏸</button>
-      <span>♪ Happy Birthday</span>
   </div>
 </div>
 
@@ -848,36 +902,40 @@ const C = {
       </div>
 
       <div class="ll-divider">· &thinsp; · &thinsp; · &nbsp; ♥ &nbsp; · &thinsp; · &thinsp; ·</div>
+        <div class="ll-note">
+          <div class="ll-salute" id="ll-salute">Dear,</div>
+          <div class="ll-body-text" id="ll-body-text"></div>
+          <div class="ll-sig">
+            <div class="ll-sig-yours">Forever yours,</div>
+            <div class="ll-sig-name" id="ll-sig-name">♥</div>
+          </div>
+        </div>
 
-      <div class="ll-note">
-        <div class="ll-salute" id="ll-salute">Dear,</div>
-        <div class="ll-body-text" id="ll-body-text"></div>
-        <div class="ll-sig">
-          <div class="ll-sig-yours">Forever yours,</div>
-          <div class="ll-sig-name" id="ll-sig-name">♥</div>
+        <div class="ll-foot">
+          <div class="ll-foot-h">♥ &nbsp;&nbsp; ♥ &nbsp;&nbsp; ♥</div>
+          <div class="ll-foot-b">So Chic Gifts · Special Edition</div>
         </div>
       </div>
-
-      <div class="ll-foot">
-        <div class="ll-foot-h">♥ &nbsp;&nbsp; ♥ &nbsp;&nbsp; ♥</div>
-        <div class="ll-foot-b">So Chic Gifts · Special Edition</div>
+<!-- ═══════════ SHARE WRAP ═══════════ -->
+      <div class="share-wrap" id="share-wrap">
+        <div class="share-row" id="share-row">
+          <button class="sh-btn sh-tt" onclick="shareToTikTok()">
+            ...
+          </button>
+          <button class="sh-btn sh-fb" onclick="shareToFb()">
+            ...
+          </button>
+          <button class="sh-btn sh-cp" id="copy-btn" onclick="copyLink()">
+            🔗 <span id="copy-lbl">Copy link</span>
+          </button>
+          <button class="sh-btn sh-save" id="save-photo-btn" onclick="saveLetterPhoto()">
+            💾 <span id="save-lbl">Save Photo</span>
+          </button>
+        </div>
+        <button class="share-fab" id="share-fab" onclick="toggleShareRow()">
+          <img src="share.png" alt="Share">
+        </button>
       </div>
-
-      <div class="share-row">
-        <button class="sh-btn sh-tt" onclick="shareToTikTok()">
-          <svg width="13" height="13" viewBox="0 0 32 32" fill="none"><path d="M21.5 4C21.8 6.5 23.2 8.5 26 9.3V13C24.2 13 22.6 12.4 21.5 11.5V20C21.5 24.7 17.7 28.5 13 28.5C8.3 28.5 4.5 24.7 4.5 20C4.5 15.3 8.3 11.5 13 11.5C13.4 11.5 13.8 11.5 14.2 11.6V15.7C13.8 15.6 13.4 15.5 13 15.5C10.5 15.5 8.5 17.5 8.5 20C8.5 22.5 10.5 24.5 13 24.5C15.5 24.5 17.5 22.5 17.5 20V4H21.5Z" fill="white"/></svg>
-          TikTok
-        </button>
-        <button class="sh-btn sh-fb" onclick="shareToFb()">
-          <svg width="13" height="13" viewBox="0 0 32 32" fill="none"><path d="M18 32V18h4.8l.7-5.5H18v-3.5c0-1.6.4-2.7 2.7-2.7H24V2.2C23.4 2.1 21.5 2 19.3 2 14.8 2 11.7 4.8 11.7 9.8v3.7H7v5.5h4.7V32H18Z" fill="white"/></svg>
-          Facebook
-        </button>
-        <button class="sh-btn sh-cp" id="copy-btn" onclick="copyLink()">
-          🔗 <span id="copy-lbl">Copy link</span>
-        </button>
-      </div>
-    </div>
-
     <input type="file" id="ll-fi0" accept="image/*" style="display:none" onchange="llHandleUp(0,this)">
     <input type="file" id="ll-fi1" accept="image/*" style="display:none" onchange="llHandleUp(1,this)">
   </div>
@@ -885,6 +943,9 @@ const C = {
 
 <div class="toast" id="toast"></div>
 
+<audio id="cakeMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 /* ══════ INIT ══════ */
@@ -984,6 +1045,7 @@ function goTo(id) {
       music.pause();
       music.currentTime = 0;
   }
+  mpSync();
 }
 
 /* ══════ PIN LOCK ══════ */
@@ -1192,6 +1254,78 @@ function llHandleUp(i, el){
 }
 
 /* ══════ SHARE ══════ */
+function toggleShareRow(){
+  document.querySelectorAll('[id="share-row"]').forEach(el => el.classList.toggle('open'));
+}
+
+/* ══ MUSIC PLAYER UI ══ */
+const mpMusic = document.getElementById('cakeMusic');
+const mpPlayBtn = document.getElementById('musicToggle');
+const mpPlayerEl = document.getElementById('musicPlayer');
+const mpFill = document.getElementById('mp-bar-fill');
+const mpCur = document.getElementById('mp-time-cur');
+const mpRem = document.getElementById('mp-time-rem');
+const mpIconPause = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+const mpIconPlay  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+function mpFmt(s){ s=Math.max(0,Math.floor(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function mpSync(){
+  mpPlayBtn.innerHTML = mpMusic.paused ? mpIconPlay : mpIconPause;
+  mpPlayerEl.classList.toggle('paused', mpMusic.paused);
+}
+mpPlayBtn.addEventListener('click', () => {
+  if (mpMusic.paused) mpMusic.play().catch(()=>{}); else mpMusic.pause();
+  mpSync();
+});
+document.getElementById('mp-prev').addEventListener('click', () => { mpMusic.currentTime = Math.max(0, mpMusic.currentTime - 10); });
+document.getElementById('mp-next').addEventListener('click', () => { mpMusic.currentTime = Math.min(mpMusic.duration||0, mpMusic.currentTime + 10); });
+document.getElementById('mp-bar').addEventListener('click', (e) => {
+  const r = e.currentTarget.getBoundingClientRect();
+  if (mpMusic.duration) mpMusic.currentTime = ((e.clientX - r.left) / r.width) * mpMusic.duration;
+});
+mpMusic.addEventListener('timeupdate', () => {
+  if (!mpMusic.duration) return;
+  mpFill.style.width = (mpMusic.currentTime / mpMusic.duration * 100) + '%';
+  mpCur.textContent = mpFmt(mpMusic.currentTime);
+  mpRem.textContent = '-' + mpFmt(mpMusic.duration - mpMusic.currentTime);
+});
+mpMusic.addEventListener('play', mpSync);
+mpMusic.addEventListener('pause', mpSync);
+
+async function saveLetterPhoto(){
+  const paper = document.querySelector('#pg-letter .ll-paper');
+  const btn = document.getElementById('save-lbl');
+  if (!paper) return;
+
+  const original = { maxHeight: paper.style.maxHeight, overflowY: paper.style.overflowY };
+  // temporarily un-clip the scrollable paper so the whole letter gets captured, not just the visible part
+  paper.style.maxHeight = 'none';
+  paper.style.overflowY = 'visible';
+
+  btn.textContent = 'Saving…';
+
+  try {
+    const canvas = await html2canvas(paper, {
+      scale: 3,                 // high-res export, crisp on retina/social media
+      backgroundColor: '#FFF8EE',
+      useCORS: true
+    });
+
+    const link = document.createElement('a');
+    link.download = `${C.receiverName || 'love'}-letter.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    btn.textContent = 'Saved! ✓';
+  } catch (err) {
+    console.error('Save photo failed:', err);
+    btn.textContent = 'Try again';
+  } finally {
+    paper.style.maxHeight = original.maxHeight;
+    paper.style.overflowY = original.overflowY;
+    setTimeout(() => { btn.textContent = 'Save Photo'; }, 2000);
+  }
+}
+
 async function shareToTikTok() {
   const p={title:`🎂 Happy Birthday ${C.receiverName}! A special surprise from So Chic Gifts`,text:'The most beautiful birthday surprise 🎂🎉',url:window.location.href};
   if(navigator.share){try{await navigator.share(p)}catch(e){if(e.name!=='AbortError')copyLink()}}
@@ -1203,11 +1337,13 @@ function shareToFb(){
 }
 function copyLink(msg){
   navigator.clipboard.writeText(window.location.href).then(()=>{
-    const lbl=document.getElementById('copy-lbl');
-    lbl.textContent='Copied! ✓';
-    document.getElementById('copy-btn').style.borderColor='var(--pink-deep)';
+    document.querySelectorAll('[id="copy-lbl"]').forEach(lbl=>lbl.textContent='Copied! ✓');
+    document.querySelectorAll('[id="copy-btn"]').forEach(btn=>btn.style.borderColor='var(--pink-deep)');
     showToast(msg||'Link copied! 🎉');
-    setTimeout(()=>{lbl.textContent='Copy link';document.getElementById('copy-btn').style.borderColor=''},2500);
+    setTimeout(()=>{
+      document.querySelectorAll('[id="copy-lbl"]').forEach(lbl=>lbl.textContent='Copy link');
+      document.querySelectorAll('[id="copy-btn"]').forEach(btn=>btn.style.borderColor='');
+    },2500);
   });
 }
 function showToast(msg){
@@ -1216,6 +1352,7 @@ function showToast(msg){
 }
 
 /* ══ INTERACTIVE CANDLES ══ */
+const CF_COLORS = ['#FFD700','#FF69B4','#98D8C8','#87CEEB','#DDA0DD','#FF8C69','#FFFFFF'];
 const totalCandles=5;
 let blownCount=0;
 
@@ -1252,8 +1389,8 @@ C.cakeWishes.forEach((w,i) => {
   d.style.animationDelay=`${.2+i*.1}s`;d.textContent=w;wishPillsEl.appendChild(d);
 });
 </script>
-<audio id="cakeMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
+<footer class="app-footer">
+  Made with love by <a href="https://sochicgifts.vercel.app" target="_blank" rel="noopener">So Chic Gifts</a>
+</footer>
 </body>
 </html>
